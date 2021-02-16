@@ -24,7 +24,7 @@ def logo(string):
     chars_count = {}
     for i in ascii_lowercase:
         chars_count.update({i: string.count(i)})
-        string.replace(i, "")
+        # string.replace(i, "")
 
     keys = list(chars_count.keys())
     values = list(chars_count.values())
@@ -39,5 +39,5 @@ def logo(string):
     print(logo_dict)
 
 
-# logo(string_generator(10000000))
-logo('google')
+logo(string_generator(10000000))
+# logo('google')
