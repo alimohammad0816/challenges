@@ -1,10 +1,10 @@
-from collections import Counter
+from collections import Counter, OrderedDict
 
 
 def logo(string):
     logo_dict = {}
     string = string.replace(' ', '')
-    chars_count = dict(Counter(string))
+    chars_count = dict(OrderedDict(sorted(Counter(string).items())))
     keys = list(chars_count.keys())
     values = list(chars_count.values())
     for i in range(3):
@@ -16,4 +16,4 @@ def logo(string):
     print(logo_dict)
 
 
-logo('helloworld www this is me and the world l helloworld www this is me ths')
+logo('google')
