@@ -1,4 +1,5 @@
 from itertools import chain, combinations
+from time import perf_counter
 
 
 def subset_creator(array):
@@ -35,4 +36,6 @@ def none_divisible(array, k):
     return my_list
 
 
-none_divisible([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 15)
+x = perf_counter()
+none_divisible([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], 15)
+print(perf_counter() - x)
