@@ -11,18 +11,18 @@ def subset_creator(array):
 
 def non_devisible(array, k):
     none_divisible_list = []
-    division = 0
+    division = False
     subset = subset_creator(array)
     for i in range(len(subset)):
         if len(subset[i]) > 1:
             x = subset[i]
-            for l in range(1, len(x)):
-                plus = x[l-1] + x[l]
-                if plus % k == 0:
-                    division = 1
-                    continue
-            if division != 0:
-                division = 0
+            x_subsets = list(combinations(x, 2))
+            for l in x_subsets:
+                if sum(l) % k == 0:
+                    division = True
+
+            if division:
+                division = False
                 continue
             else:
                 none_divisible_list.append(x)
