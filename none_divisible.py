@@ -9,8 +9,7 @@ def subset_creator(array):
     return subsets
 
 
-def non_devisible(array, k):
-    none_divisible_list = []
+def none_devisible_calculator(array, k):
     division = False
     subset = subset_creator(array)
     for i in range(len(subset)):
@@ -20,15 +19,20 @@ def non_devisible(array, k):
             for l in x_subsets:
                 if sum(l) % k == 0:
                     division = True
-
+                    break
             if division:
                 division = False
                 continue
             else:
-                none_divisible_list.append(x)
-
-    print(none_divisible_list)
-    return none_divisible_list
+                yield x
 
 
-non_devisible([1, 2, 7, 4], 3)
+def none_divisible(array, k):
+    my_list = []
+    for i in none_devisible_calculator(array, k):
+        my_list.append(i)
+    print(my_list)
+    return my_list
+
+
+none_divisible([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 15)
