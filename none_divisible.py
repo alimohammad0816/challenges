@@ -4,38 +4,25 @@ from time import perf_counter
 
 def subset_creator(array):
     subsets = []
-    for i in range(len(array)+1):
+    for i in range(1, len(array)+1):
         subsets.append(list(combinations(array, i)))
     subsets = list(chain.from_iterable(subsets))
     return subsets
 
 
 def none_devisible_calculator(array, k):
-    division = False
     subset = subset_creator(array)
-    for i in range(len(subset)):
+    for i in range(len(subset)-1, 1, -1):
         if len(subset[i]) > 1:
             x = subset[i]
             x_subsets = list(combinations(x, 2))
             for l in x_subsets:
                 if sum(l) % k == 0:
-                    division = True
                     break
-            if division:
-                division = False
-                continue
-            else:
-                yield x
-
-
-def none_divisible(array, k):
-    my_list = []
-    for i in none_devisible_calculator(array, k):
-        my_list.append(i)
-    print(my_list)
-    return my_list
+                else:
+                    print(subset[i])
+                    return subset[i]
 
 
 x = perf_counter()
-none_divisible([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20], 15)
-print(perf_counter() - x)
+none_devisible_calculator(list(range(1, 12)), 3)
