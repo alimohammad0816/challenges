@@ -1,5 +1,4 @@
 from itertools import chain, combinations
-from time import perf_counter
 
 
 def subset_creator(array):
@@ -19,7 +18,6 @@ def none_devisible_calculator(array, k):
             x_subsets = list(combinations(x, 2))
             for l in x_subsets:
                 if sum(l) % k == 0:
-                    print(x, l, sum(l))
                     is_div = True
 
             if not is_div:
@@ -30,5 +28,5 @@ def none_devisible_calculator(array, k):
                 is_div = False
 
 
-x = perf_counter()
-none_devisible_calculator([1, 2, 3, 4, 5, 6, 7, 8], 3)
+my_list = [4, 3, 2, 1]
+none_devisible_calculator(my_list, 3)
