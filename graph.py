@@ -18,39 +18,53 @@ class Graph:
 
         ways = self.weights.keys()
         if f"{x}-{y}" in ways:
-            return f'from "{x}" go to "{y}", cost: {self.weights[f"{x}-{y}"]}'
+            path = [x, y]
 
         else:
-            return self._find_way(x, y)
+            path = self._find_way(x, y)
+
+        weight = 0
+        for i in range(1, len(path)-1):
+            weight += self.weights[f"{path[i-1]}-{path[i]}"]
+
+        return f'{" -> ".join(path)}, weight: {weight}'
 
     def _find_way(self, startpoint, endpoint):
+        shortest_paths = {startpoint: (None, 0)}
+        this_node = startpoint
         visited = []
-        ways = [[startpoint]]
 
-        while ways:
-            path = ways.pop(0)
-            node = path[-1]
+        while this_node != endpoint:
+            visited.append(this_node)
+            destinations = self.ways[this_node]
+            weight_to_this_node = shortest_paths[this_node][1]
 
-            if node not in visited:
-                for c in self.ways[node]:
-                    new_path = list(path)
-                    new_path.append(c)
-                    ways.append(new_path)
+            for next_node in destinations:
+                weight = self.weights[f"{this_node}-{next_node}"] + weight_to_this_node
 
-                    if c == endpoint:
-                        weight = 0
-                        for i in range(1, len(new_path)-1):
-                            weight += self.weights[f"{new_path[i-1]}-{new_path[i]}"]
-                        return f'{" -> ".join(new_path)} weight: {weight}'
+                if next_node not in shortest_paths:
+                    shortest_paths[next_node] = (this_node, weight)
 
-                visited.append(node)
+                else:
+                    current_shortest_weight = shortest_paths[next_node][1]
+                    if current_shortest_weight > weight:
+                        shortest_paths[next_node] = (this_node, weight)
+            
+            next_destinations = {node: shortest_paths[node] for node in shortest_paths if node not in visited}
 
-    def _has_connection(self, way):
-        if self.ways.get(way):
-            return True
+            if not next_destinations:
+                return "no connection"
 
-        else:
-            return False
+            this_node = min(next_destinations, key=lambda k: next_destinations[k][1])
+
+        path = []
+        while this_node is not None:
+            path.append(this_node)
+            next_node = shortest_paths[this_node][0]
+            this_node = next_node
+
+        path.reverse()
+        return path
 
     def _get_info(self):
         ways = {}
