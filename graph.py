@@ -21,50 +21,41 @@ class Graph:
             path = [x, y]
 
         else:
-            path = self._find_way(x, y)
+            correct_paths = self._find_way(x, y, x, [])
+            correct_paths_dict = {}
 
-        weight = 0
-        for i in range(1, len(path)-1):
-            weight += self.weights[f"{path[i-1]}-{path[i]}"]
+            for path in correct_paths:
+                weight = 0
+                for i in range(1, len(path)-1):
+                    weight += self.weights[f"{path[i-1]}-{path[i]}"]
 
-        return f'{" -> ".join(path)}, weight: {weight}'
-
-    def _find_way(self, startpoint, endpoint):
-        shortest_paths = {startpoint: (None, 0)}
-        this_node = startpoint
-        visited = []
-
-        while this_node != endpoint:
-            visited.append(this_node)
-            destinations = self.ways[this_node]
-            weight_to_this_node = shortest_paths[this_node][1]
-
-            for next_node in destinations:
-                weight = self.weights[f"{this_node}-{next_node}"] + weight_to_this_node
-
-                if next_node not in shortest_paths:
-                    shortest_paths[next_node] = (this_node, weight)
-
-                else:
-                    current_shortest_weight = shortest_paths[next_node][1]
-                    if current_shortest_weight > weight:
-                        shortest_paths[next_node] = (this_node, weight)
+                correct_paths_dict[f'{",".join(path)}'] = weight
             
-            next_destinations = {node: shortest_paths[node] for node in shortest_paths if node not in visited}
+            way = list(correct_paths_dict.keys())[0].split(",")
+            weight = list(correct_paths_dict.values())[0]
 
-            if not next_destinations:
-                return "no connection"
+            for key, value in correct_paths_dict.items():
+                if value < weight:
+                    weight = value
+                    way = key.split(",")
 
-            this_node = min(next_destinations, key=lambda k: next_destinations[k][1])
+                elif value == weight:
+                    if len(key.split(",")) < len(way):
+                        way = key.split(",")
 
-        path = []
-        while this_node is not None:
-            path.append(this_node)
-            next_node = shortest_paths[this_node][0]
-            this_node = next_node
+            return f'Best Way: {" -> ".join(way)}, weight: {weight}'
 
-        path.reverse()
-        return path
+    def _find_way(self, startpoint, endpoint, current_path, correct_paths):
+        for i in self.ways[startpoint]:
+            if i == endpoint:
+                c = current_path+","+i
+                correct_paths.append(c.split(","))
+
+            elif i != startpoint:
+                if i not in current_path:
+                    self._find_way(i, endpoint, current_path+","+i, correct_paths)
+        
+        return correct_paths
 
     def _get_info(self):
         ways = {}
@@ -93,6 +84,14 @@ class Graph:
 
 
 a = Graph([
+    ("a", "b", 2), ("a", "c", 4),
+    ("b", "d", 5), ("c", "d", 1),
+    ("d", "e", 3),
+])
+
+print(a.find_way("a", "e"))
+
+b = Graph([
     ("a1", "b1", 4), ("a1", "b2", 7), ("b2", "c1", 8), ("b2", "c2", 4),
     ("c1", "d1", 1), ("c1", "d2", 5), ("a2", "b3", 9), ("a2", "b4", 1),
     ("b3", "c3", 7), ("b3", "c4", 2), ("b3", "c5", 10), ("b3", "c6", 3),
@@ -101,4 +100,4 @@ a = Graph([
 ])
 
 
-print(a.find_way("a1", "d4"))
+print(b.find_way("a1", "d4"))
