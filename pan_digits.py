@@ -1,19 +1,26 @@
-def is_pan_digit(value: int, pan_range: range) -> bool:
-    value = str(value)
-
-    if len(value) != len(pan_range):
+def is_pan_digit(value: str, pan_digit: str) -> bool:
+    if len(value) != len(pan_digit):
         return False
 
-    elif not all((str(i) in value for i in pan_range)):
+    elif not all((str(i) in value for i in pan_digit)):
         return False
 
     else:
         return True
 
 
-def check_pan_digit(first: int, second: int, pan_digit: int) -> bool:
-    third = first * second
-    return is_pan_digit(int(f"{first}{second}{third}"), range(1, pan_digit+1))
+def find_pandigits():
+    p_sum = 0
+
+    for i in range(1, 100):
+        for l in range(1, 2000):
+            x = f"{i}{l}{i * l}"
+            if len(x) == 9:
+                if is_pan_digit(x, "123456789"):
+                    print(f"{i} * {l} = {i * l}")
+                    p_sum += i * l
+
+    return p_sum
 
 
-print(check_pan_digit(12, 2, 2))
+find_pandigits()
